@@ -1,0 +1,13 @@
+# depslib dependency file v1.0
+1520155837 source:e:\workplace\cong\main.cpp
+	<iostream>
+	<SDL.h>
+
+1520157848 source:e:\workplace\cong\graphics.cpp
+	"graphics.h"
+	<bits/stdc++.h>
+
+1520158631 e:\workplace\cong\graphics.h
+	<iostream>
+	<SDL.h>
+
