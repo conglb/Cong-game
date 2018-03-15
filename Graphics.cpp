@@ -1,5 +1,5 @@
 #include "graphics.h"
-#include <bits/stdc++.h>
+#include <iostream>
 
 #define GRID_SIZE 25
 #define SCREEN_HEIGHT 600
@@ -45,13 +45,49 @@ void graphics::quitSDL(SDL_Window* window, SDL_Renderer* renderer)
 	SDL_Quit();
 }
 
-void graphics::waitUntilKeyPressed()
+void graphics::waitUntilKeyPressedToCloseWindow()
 {
     SDL_Event e;
     while (true) {
         if ( SDL_WaitEvent(&e) != 0 &&
              (e.type == SDL_KEYDOWN || e.type == SDL_QUIT) )
             return;
-        SDL_Delay(100);
+        //SDL_Delay(100);
     }
+}
+
+bool graphics::havePressed() {
+    SDL_Event e;
+    while (1)
+    {
+        if ( SDL_WaitEvent(&e)!=0 )
+        if (e.type == SDL_KEYDOWN || e.type == SDL_MOUSEBUTTONDOWN) return 1;
+        else if (e.type == SDL_QUIT) return 0;
+    }
+}
+/*
+//The button
+//class Button {
+//    private:
+    //The attributes of the button
+    Button::SDL_Rect box;
+    //The part of the button sprite sheet that will be shown
+    Button::SDL_Rect* clip;
+//public:
+    //Initialize the variables
+    Button::Button( int x, int y, int w, int h );
+    //Handles events and set the button's sprite region
+    Button::void handle_events();
+    //Shows the button on the screen
+    Button::void show();
+//};
+*/
+
+button::button( int x, int y, int w, int h ) {
+    //Set the button's attributes
+        box.x = x;
+        box.y = y;
+        box.w = w;
+        box.h = h;
+        //Set the default sprite
 }
