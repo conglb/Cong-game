@@ -5,7 +5,14 @@
 #include <SDL.h>
 #include <SDL_image.h>
 
-#include "painter.h"
+#include "Painter.h"
+
+#define SCREEN_HEIGHT 500
+#define SCREEN_WIDTH 800
+#define IMAGE_HEIGHT 512
+#define IMAGE_WIDTH 512
+#define IMAGE_NEW_WIDTH 400
+#define IMAGE_NEW_HEIGHT 400
 
 using namespace std;
 
@@ -15,9 +22,7 @@ Painter::Painter(SDL_Window* window, SDL_Renderer* renderer_)
     SDL_RenderGetLogicalSize(renderer, &width, &height);
     if (width == 0 && height == 0)
         SDL_GetWindowSize(window, &width, &height);
-
-    setPosition(width/2, height/2);
-    setAngle(0);
+    setPosition(0, 0);
     setColor(WHITE_COLOR);
     clearWithBgColor(BLUE_COLOR);
 }
@@ -26,11 +31,6 @@ void Painter::setPosition(float x, float y)
 {
     this->x = x;
     this->y = y;
-}
-
-void Painter::setAngle(float angle)
-{
-    this->angle = angle - floor(angle/360)*360;
 }
 
 void Painter::setColor(SDL_Color color)
@@ -47,79 +47,14 @@ void Painter::clearWithBgColor(SDL_Color bgColor)
     setColor(curColor);
 }
 
-void Painter::moveForward(float length)
+string Painter::toString(int x)
 {
-    float prevX = x, prevY = y;
-    jumpForward(length);
-    SDL_RenderDrawLine(renderer, (int)prevX, (int)prevY, (int)x, (int)y);
-}
-
-void Painter::jumpForward(float length)
-{
-    float rad = (angle / 180) * M_PI;
-    x += (cos(rad) * length);
-    y -= (sin(rad) * length);
-}
-
-void Painter::setRandomColor()
-{
-    Uint8 r = rand() % 256;
-    Uint8 g = rand() % 256;
-    Uint8 b = rand() % 256;
-    SDL_Color color = {r, g, b};
-    setColor(color);
-}
-
-void Painter::createCircle(float radius)
-{
-    double rad = (angle / 180) * M_PI;
-    int centerX = x + cos(rad) * radius;
-    int centerY = y - sin(rad) * radius;
-
-    int dx = radius;
-    int dy = 0;
-    int err = 0;
-
-    while (dx >= dy)
-    {
-        SDL_RenderDrawPoint(renderer, centerX + dx, centerY + dy);
-        SDL_RenderDrawPoint(renderer, centerX + dy, centerY + dx);
-        SDL_RenderDrawPoint(renderer, centerX - dy, centerY + dx);
-        SDL_RenderDrawPoint(renderer, centerX - dx, centerY + dy);
-        SDL_RenderDrawPoint(renderer, centerX - dx, centerY - dy);
-        SDL_RenderDrawPoint(renderer, centerX - dy, centerY - dx);
-        SDL_RenderDrawPoint(renderer, centerX + dy, centerY - dx);
-        SDL_RenderDrawPoint(renderer, centerX + dx, centerY - dy);
-
-        if (err <= 0)
-        {
-            dy += 1;
-            err += 2*dy + 1;
-        }
-        if (err > 0)
-        {
-            dx -= 1;
-            err -= 2*dx + 1;
-        }
+    string res = "";
+    while (x) {
+        res = char(x % 10 + '0') + res;
+        x /= 10;
     }
-}
-
-void Painter::createSquare(float size)
-{
-    for (int i = 0; i < 4; ++i) {
-        moveForward(size);
-        turnLeft(90);
-    }
-}
-
-void Painter::createParallelogram(float size)
-{
-    for (int i = 0; i < 2; ++i) {
-        moveForward(size);
-        turnLeft(60);
-        moveForward(size);
-        turnLeft(120);
-    }
+    return res;
 }
 
 SDL_Texture* Painter::loadTexture( string path )
@@ -144,27 +79,64 @@ bool Painter::createImage( SDL_Texture* texture )
     return true;
 }
 
-string Painter::toString(int x) {
-    string res = "";
-    while (x) {
-        res = char(x % 10 + '0') + res;
-        x /= 10;
-    }
-    return res;
+bool Painter::createImageWithRect( SDL_Texture* texture, SDL_Rect& rect1, SDL_Rect& rect2)
+{
+    if( texture == NULL ) return 0;
+    SDL_RenderCopy( renderer, texture, &rect1, &rect2);
+    return 1;
 }
 
-void Painter::showImage(int a, int b ) {
+void Painter::showSence1()
+{
+    SDL_Texture* texture = loadTexture("image/BACK.png");
+    clearWithBgColor(WHITE_COLOR);
+    createImage(texture);
+    SDL_RenderPresent(renderer);
+}
+
+void Painter::showSence2()
+{
+    SDL_Texture* texture;
+    texture = loadTexture("image/h3.bmp");
+    SDL_Rect rect1;
+    SDL_Rect rect2;
+    rect1.x = 0;
+    rect1.y = 0;
+    rect1.h = 110;
+    rect1.w = 627;
+    rect2.x = SCREEN_WIDTH/2 - 600/2;
+    rect2.y = SCREEN_HEIGHT/2 - 200/2;
+    rect2.h = 200;
+    rect2.w = 600;
+    clearWithBgColor(WHITE_COLOR);
+    createImageWithRect(texture, rect1, rect2);
+    SDL_RenderPresent(renderer);
+}
+
+void Painter::showImage(int a, int b )
+{
     SDL_Texture* texture;
     string dir = toString(a);
     string file = toString(b);
     texture = loadTexture("image/" + dir + "/" + file + ".png");
+    SDL_Rect rect1;
+    SDL_Rect rect2;
+    rect1.x = 0;
+    rect1.y = 0;
+    rect1.h = IMAGE_HEIGHT;
+    rect1.w = IMAGE_WIDTH;
+    rect2.x = SCREEN_WIDTH/2 - IMAGE_NEW_WIDTH/2;
+    rect2.y = SCREEN_HEIGHT/2 - IMAGE_NEW_HEIGHT/2;
+    rect2.h = IMAGE_NEW_HEIGHT;
+    rect2.w = IMAGE_NEW_WIDTH;
     clearWithBgColor(WHITE_COLOR);
-    createImage(texture);
+    createImageWithRect(texture, rect1, rect2);
     SDL_RenderPresent(renderer);
     cout << "SHOWING IMAGE "<<file<<endl;
 }
 
-void Painter::showResult(int x) {
+void Painter::showResult(int x)
+{
     switch (x) {
     case 1 :
         SDL_Texture* texture;
