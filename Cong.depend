@@ -1,31 +1,54 @@
 # depslib dependency file v1.0
-1521101881 source:e:\workplace\cong\main.cpp
-	<iostream>
-	<cstdlib>
-	<ctime>
-	<cstring>
-	<SDL.h>
-	"graphics.h"
-	"painter.h"
-
-1521101941 source:e:\workplace\cong\graphics.cpp
-	"graphics.h"
-	<iostream>
-
-1520474533 e:\workplace\cong\graphics.h
+1524555855 source:e:\workplace\cong\main.cpp
 	<iostream>
 	<SDL.h>
+	"Window.h"
+	"Painter.h"
+	"Game.h"
+	"SDL_mixer.h"
 
-1521101662 source:e:\workplace\cong\painter.cpp
+1523591454 source:e:\workplace\cong\graphics.cpp
+	"graphics.h"
+	<iostream>
+
+1523274691 e:\workplace\cong\graphics.h
+	<iostream>
+	<SDL.h>
+
+1524495293 source:e:\workplace\cong\painter.cpp
 	<cmath>
 	<cstdlib>
 	<iostream>
 	<SDL.h>
 	<SDL_image.h>
-	"painter.h"
+	"Painter.h"
 
-1521096980 e:\workplace\cong\painter.h
+1524489429 e:\workplace\cong\painter.h
 	<string>
 	<SDL.h>
 	<SDL_image.h>
+
+1524488751 e:\workplace\cong\window.h
+	<iostream>
+	<SDL.h>
+
+1524488478 source:e:\workplace\cong\window.cpp
+	"Window.h"
+	<iostream>
+
+1524643213 source:e:\workplace\cong\game.cpp
+	<cstring>
+	<cstdlib>
+	<ctime>
+	<SDL.h>
+	<SDL_image.h>
+	"Game.h"
+	"Painter.h"
+	<SDL_mixer.h>
+
+1524494135 e:\workplace\cong\game.h
+	<SDL.h>
+	<SDL_image.h>
+	"Painter.h"
+	"Window.h"
 

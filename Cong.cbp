@@ -32,11 +32,13 @@
 			<Add option="-Wall" />
 			<Add option="-fexceptions" />
 		</Compiler>
-		<Unit filename="Graphics.cpp" />
-		<Unit filename="graphics.h" />
+		<Unit filename="Game.cpp" />
+		<Unit filename="Game.h" />
+		<Unit filename="Painter.cpp" />
+		<Unit filename="Painter.h" />
+		<Unit filename="Window.cpp" />
+		<Unit filename="Window.h" />
 		<Unit filename="main.cpp" />
-		<Unit filename="painter.cpp" />
-		<Unit filename="painter.h" />
 		<Extensions>
 			<code_completion />
 			<envvars />
