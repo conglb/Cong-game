@@ -52,10 +52,12 @@ int main(int argc, char** argv) {
 
     // Scene 2
     if (texture) { SDL_DestroyTexture(texture); texture = nullptr; }
+    painter.showSence2();
+    /*
     texture = painter.loadTexture("image/h3.bmp");
-    painter.clearWithBgColor(WHITE_COLOR);
-    painter.createImage(texture);
-    SDL_RenderPresent(renderer);
+    #painter.clearWithBgColor(WHITE_COLOR);
+    #painter.createImage(texture);
+    #SDL_RenderPresent(renderer);*/
 
     // Wait for input or window close
     if (!canvas.havePressed()) {
@@ -65,8 +67,9 @@ int main(int argc, char** argv) {
     }
 
     bool running = true;
+    int point = 0;
 
-    for (int level = 1; running && level <= 2; level++) {
+    for (int level = 1; running && level <= 15; level++) {
         std::memset(visit, 0, sizeof(visit));
         int result = -1;
 
@@ -87,7 +90,8 @@ int main(int argc, char** argv) {
                     if (e.type == SDL_QUIT) { running = false; break; }
                     if (e.type == SDL_KEYDOWN || e.type == SDL_MOUSEBUTTONDOWN) {
                         result = visit[image_index] ? 1 : 0;
-                        std::cout << "result=" << result << std::endl;
+                        if (result) point++;
+                        cout << "Round: " << level << " " << "Point: " << point << endl;
                         inputCaptured = true;
                         break;
                     }

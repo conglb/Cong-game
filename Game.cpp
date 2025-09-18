@@ -43,7 +43,7 @@ Game::Game( SDL_Window* window, SDL_Renderer* renderer, Window& canvas, Painter&
 	}
     // Slideshow here
     bool visit[22];
-    for (int level=1; level<=5; level++) {
+    for (int level=1; level<=15; level++) {
         memset(visit,0,sizeof(visit));
         int res = -1;
         for (int i=1; i<=12; i++) {

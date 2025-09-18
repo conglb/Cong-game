@@ -7,7 +7,7 @@
 
 using namespace std;
 
-const string WINDOW_TITLE = "Cong - A Simple Game";
+const string WINDOW_TITLE = "Cong - A Memory Game";
 
 void Graphics::logSDLError(std::ostream& os, const std::string &msg, bool fatal)
 {

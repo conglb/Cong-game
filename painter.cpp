@@ -137,21 +137,42 @@ void Painter::showImage(int a, int b )
 
 void Painter::showResult(int x)
 {
+    SDL_Texture* texture = nullptr;
+
     switch (x) {
-    case 1 :
-        SDL_Texture* texture;
-        texture = loadTexture("image/win.bmp");
-        clearWithBgColor(WHITE_COLOR);
-        createImage(texture);
-        SDL_RenderPresent(renderer);
-        cout << "SHOWING IMAGE WIN"<<endl;
-        break;
-    default :
-        SDL_Texture* texture2;
-        texture2 = loadTexture("image/loss.bmp");
-        clearWithBgColor(WHITE_COLOR);
-        createImage(texture2);
-        SDL_RenderPresent(renderer);
-        cout << "SHOWING IMAGE LOSS"<<endl;
+        case 1:
+            texture = loadTexture("image/win.bmp");
+            break;
+        default:
+            texture = loadTexture("image/loss.bmp");
+            break;
     }
+
+    clearWithBgColor(WHITE_COLOR);
+
+    // Get texture size
+    int texW = 0, texH = 0;
+    SDL_QueryTexture(texture, nullptr, nullptr, &texW, &texH);
+
+    // Get window size
+    int winW = 0, winH = 0;
+    SDL_GetRendererOutputSize(renderer, &winW, &winH);
+
+    // Destination rect (scaled size)
+    SDL_Rect dstRect;
+    dstRect.h = winH / 2;
+
+    // Scale
+    float scale = (float)dstRect.h / texH;
+    dstRect.w = (int)(texW * scale);
+
+    // Center in the window
+    dstRect.x = (winW - dstRect.w) / 2;
+    dstRect.y = (winH - dstRect.h) / 2;
+
+    // Render
+    SDL_RenderCopy(renderer, texture, nullptr, &dstRect);
+
+    SDL_RenderPresent(renderer);
+    SDL_DestroyTexture(texture); // free to avoid memory leak
 }
