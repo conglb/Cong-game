@@ -1,4 +1,4 @@
-#include "graphics.h"
+#include "Graphics.h"
 #include <iostream>
 
 #define GRID_SIZE 25
@@ -9,7 +9,7 @@ using namespace std;
 
 const string WINDOW_TITLE = "Cong - A Simple Game";
 
-void graphics::logSDLError(std::ostream& os, const std::string &msg, bool fatal)
+void Graphics::logSDLError(std::ostream& os, const std::string &msg, bool fatal)
 {
     os << msg << " Error: " << SDL_GetError() << std::endl;
     if (fatal) {
@@ -18,7 +18,7 @@ void graphics::logSDLError(std::ostream& os, const std::string &msg, bool fatal)
     }
 }
 
-void graphics::initSDL(SDL_Window* &window, SDL_Renderer* &renderer)
+void Graphics::initSDL(SDL_Window* &window, SDL_Renderer* &renderer)
 {
     if (SDL_Init(SDL_INIT_EVERYTHING) != 0)
         logSDLError(std::cout, "SDL_Init", true);
@@ -38,14 +38,14 @@ void graphics::initSDL(SDL_Window* &window, SDL_Renderer* &renderer)
     SDL_RenderSetLogicalSize(renderer, SCREEN_WIDTH, SCREEN_HEIGHT);
 }
 
-void graphics::quitSDL(SDL_Window* window, SDL_Renderer* renderer)
+void Graphics::quitSDL(SDL_Window* window, SDL_Renderer* renderer)
 {
 	SDL_DestroyRenderer(renderer);
 	SDL_DestroyWindow(window);
 	SDL_Quit();
 }
 
-void graphics::waitUntilKeyPressedToCloseWindow()
+void Graphics::waitUntilKeyPressedToCloseWindow()
 {
     SDL_Event e;
     while (true) {
@@ -56,16 +56,15 @@ void graphics::waitUntilKeyPressedToCloseWindow()
     }
 }
 
-bool graphics::havePressed() {
+bool Graphics::havePressed() {
     SDL_Event e;
     while (1)
     {
         if ( SDL_WaitEvent(&e)!=0 )
-        if (e.type == SDL_KEYDOWN || e.type == SDL_MOUSEBUTTONDOWN) return 1;
-        else if (e.type == SDL_QUIT) return 0;
+        if (e.type == SDL_KEYDOWN || e.type == SDL_MOUSEBUTTONDOWN) {return 1;} else if (e.type == SDL_QUIT) return 0;
     }
 }
-void graphics::haveClick(bool visit[], int image_index, int& res) {
+void Graphics::haveClick(bool visit[], int image_index, int& res) {
         SDL_Event e;
         int dem = 0;
         while(dem < 1000) {

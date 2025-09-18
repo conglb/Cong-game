@@ -3,14 +3,14 @@
 #include <ctime>
 #include <cstring> // memset
 #include <SDL.h>
-#include "graphics.h"
-#include "painter.h"
+#include "Graphics.h"
+#include "Painter.h"
 
 using namespace std;
 
 SDL_Window* window;
 SDL_Renderer* renderer;
-graphics canvas;
+Graphics canvas;
 SDL_Texture* texture = NULL;
 
 bool visit[100], image_index, image_dir, res;
