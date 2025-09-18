@@ -20,92 +20,109 @@ int main(int argc, char** argv) {
     for (int i = 0; i < argc; ++i) {
         std::cout << argv[i] << std::endl;
     }
-    srand(time(NULL));
+
+    // Seed RNG
+    std::srand(std::time(nullptr));
+
+    // Init SDL
     canvas.initSDL(window, renderer);
     Painter painter(window, renderer);
 
-    // Drawing code here
-    // use SDL_RenderPresent(renderer) to show it
+    // Helper: check if window is still open by polling events
+    auto windowStillOpen = []() -> bool {
+        SDL_Event e;
+        while (SDL_PollEvent(&e)) {
+            if (e.type == SDL_QUIT) return false;
+        }
+        return true;
+    };
 
-    texture = painter.loadTexture("image/h2.png");
+    // Scene 1
+    texture = painter.loadTexture("image/scene1.png");
     painter.clearWithBgColor(WHITE_COLOR);
     painter.createImage(texture);
     SDL_RenderPresent(renderer);
 
-    if (canvas.havePressed()) cout << "Click on sence 1"<<endl; else canvas.quitSDL(window, renderer);
+    // Wait for input or window close
+    if (!canvas.havePressed()) {
+        if (texture) SDL_DestroyTexture(texture);
+        canvas.quitSDL(window, renderer);
+        return 0;
+    }
 
+    // Scene 2
+    if (texture) { SDL_DestroyTexture(texture); texture = nullptr; }
     texture = painter.loadTexture("image/h3.bmp");
     painter.clearWithBgColor(WHITE_COLOR);
     painter.createImage(texture);
     SDL_RenderPresent(renderer);
 
-    if (canvas.havePressed()) cout << "Click on sence 2"<<endl; else canvas.quitSDL(window, renderer);
-    for (int level=1; level<=2; level++) {
-        memset(visit,0,sizeof(visit));
-        int res = -1;
-        for (int i=1; i<=12; i++) {
-            int image_index = rand() % 15 + 1;
-            //int a = rand() % 15 + 1;
-            cout << image_index << endl;
+    // Wait for input or window close
+    if (!canvas.havePressed()) {
+        if (texture) SDL_DestroyTexture(texture);
+        canvas.quitSDL(window, renderer);
+        return 0;
+    }
+
+    bool running = true;
+
+    for (int level = 1; running && level <= 2; level++) {
+        std::memset(visit, 0, sizeof(visit));
+        int result = -1;
+
+        for (int i = 1; running && i <= 12; i++) {
+            int image_index = std::rand() % 15 + 1;
+            std::cout << image_index << std::endl;
             image_dir = 1;
+
+            // Show current image
             painter.showImage(image_dir, image_index);
-            SDL_Delay(1000);
-            SDL_Event e;
-            if (e.type == SDL_KEYDOWN || e.type == SDL_MOUSEBUTTONDOWN)
-            {
-                if (!visit[image_index]) res = 0; else res = 1;
-                cout << "dlkfjsldkfjsl;dkjf"<<res;
+
+            // Replace fixed delay with a loop that can detect window close and user input
+            Uint32 start = SDL_GetTicks();
+            bool inputCaptured = false;
+            while (running && (SDL_GetTicks() - start < 1000)) {
+                SDL_Event e;
+                while (SDL_PollEvent(&e)) {
+                    if (e.type == SDL_QUIT) { running = false; break; }
+                    if (e.type == SDL_KEYDOWN || e.type == SDL_MOUSEBUTTONDOWN) {
+                        result = visit[image_index] ? 1 : 0;
+                        std::cout << "result=" << result << std::endl;
+                        inputCaptured = true;
+                        break;
+                    }
+                }
+                if (!running || inputCaptured) break;
+                SDL_Delay(10);
             }
-            else if (visit[image_index]) res = 0; else visit[image_index] = 1;
-            if (res!=-1) {
-                painter.showResult(res);
-                if (canvas.havePressed()) cout << "Click on sence 3"<<endl; else canvas.quitSDL(window, renderer);
+            if (!running) break;
+
+            if (!inputCaptured) {
+                // No input during the display window: update visit or mark as repeated (loss)
+                if (visit[image_index]) {
+                    result = 0; // repeated -> loss
+                } else {
+                    visit[image_index] = 1;
+                }
+            }
+
+            if (result != -1) {
+                painter.showResult(result);
+                // Wait for input to continue, but handle window close
+                if (!canvas.havePressed()) {
+                    running = false;
+                }
                 break;
             }
         }
     }
 
-    /*
-    SDL_Surface *imageSurface = NULL;
-    SDL_Surface *windowSurface = NULL;
-
-
-    windowSurface = SDL_GetWindowSurface( window );
-
-    SDL_Event windowEvent;
-
-    imageSurface = SDL_LoadBMP( "h3.bmp" );
-    if( imageSurface == NULL )
-    {
-        std::cout << "SDL could not load image! SDL Error: " << SDL_GetError( ) << std::endl;
+    if (running) {
+        // Final wait; also exits if window is closed
+        canvas.waitUntilKeyPressedToCloseWindow();
     }
 
-    while ( true )
-    {
-        if ( SDL_PollEvent( &windowEvent ) )
-        {
-            if ( SDL_QUIT == windowEvent.type )
-            {
-                break;
-            }
-        }
-
-        SDL_BlitSurface( imageSurface, NULL, windowSurface, NULL );
-
-        //Update the surface
-        SDL_UpdateWindowSurface( window );
-    }
-
-    SDL_FreeSurface( imageSurface );
-    SDL_FreeSurface( windowSurface );
-
-    imageSurface = NULL;
-    windowSurface = NULL;
-    */
-
-    canvas.waitUntilKeyPressedToCloseWindow();
-
-
-    SDL_DestroyTexture(texture);
+    if (texture) SDL_DestroyTexture(texture);
     canvas.quitSDL(window, renderer);
+    return 0;
 }
