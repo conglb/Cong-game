@@ -30,3 +30,35 @@
 *.exe
 *.out
 *.app
+
+# Build systems (CMake)
+build/
+build-*/
+cmake-build-*/
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+install_manifest.txt
+Makefile
+CTestTestfile.cmake
+Testing/
+_deps/
+compile_commands.json
+
+# IDE/editor settings
+.idea/
+.vscode/
+*.code-workspace
+
+# OS-generated files
+.DS_Store
+Thumbs.db
+
+# Logs and caches
+*.log
+*.cache
+
+# Coverage files
+*.gcno
+*.gcda
+*.gcov
